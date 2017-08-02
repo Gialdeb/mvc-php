@@ -1,0 +1,5 @@
+Password Reset
+
+Perpiacere clicca sul seguente link per resettare la tua passsword:
+
+{{ url }}
