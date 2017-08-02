@@ -1,0 +1,24 @@
+{
+  "authors":
+  [
+    {
+      "name": "Giuseppe Alessandro De Blasio",
+      "email": "info@giuseppealessandrodeblasio.it",
+      "homepage": "http://www.giuseppealessandrodeblasio.it",
+      "role": "Developer"
+    }
+  ],
+    "require": {
+        "twig/twig": "~2.0",
+    "phpmailer/phpmailer": "^5.2",
+    "mailgun/mailgun-php": "^2.3",
+    "php-http/guzzle6-adapter": "^1.1",
+    "php-http/message": "^1.6"
+    },
+    "autoload": {
+        "psr-4": {
+             "Core\\": "Core/",
+             "App\\": "App/"
+        }
+    }
+}

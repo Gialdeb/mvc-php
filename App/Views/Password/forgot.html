@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}Recupera la Password{% endblock %}
+
+{% block body %}
+
+    <h1>Richiesta Reset Password</h1>
+
+    <form action="/password/request-reset" method="post">
+        <div>
+            <label for="inputEmail">Indirizzo Email</label>
+            <input type="email" id="inputEmail" name="email" placeholder="Indirizzo Email" autofocus required>
+        </div>
+
+        <button type="submit">Richiedi nuova password</button>
+        <a href="/login/new">Annulla!</a>
+    </form>
+
+{% endblock %}

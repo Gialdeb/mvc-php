@@ -1,0 +1,11 @@
+/node_modules
+/public/storage
+/storage/*.key
+/vendor
+/.idea
+/.vagrant
+npm-debug.log
+.env
+resources/views/users/
+/App/Config.php
+
