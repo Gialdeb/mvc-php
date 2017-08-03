@@ -38,4 +38,27 @@ class Password extends Controller
 
         View::renderTemplate('Password/reset_requested.html');
     }
+
+    /**
+     * Mostro il reset della password
+     *
+     * @return void
+     */
+
+    public function resetAction()
+    {
+        $token = $this->route_params['token'];
+
+        $user = User::findByPasswordReset($token);
+
+//        var_dump($user);
+        if($user){
+
+            View::renderTemplate('Password/reset.html');
+        } else {
+
+            echo "password reset Token non valido!";
+        }
+    }
+    
 }

@@ -294,7 +294,7 @@ class User extends Model
 
     public function sendPasswordResetEmail()
     {
-        $url = 'http://' . $_SERVER['HTTP_HOST']. 'password/reset/' . $this->password_reset_token;
+        $url = 'http://' . $_SERVER['HTTP_HOST']. '/password/reset/' . $this->password_reset_token;
 
         $text = View::getTemplate('Password/reset_email.txt', ['url' => $url]);
         $html = View::getTemplate('Password/reset_email.html', ['url' => $url]);
@@ -303,4 +303,45 @@ class User extends Model
 
     }
 
+    /**
+     * Cerco dal model utente se la pwd è stata resettata e se il token è scaduto
+     *
+     * @return string Password reset token inviato all'utente
+     *
+     * @ mixed User oggetto cerco se il token non è scaduto
+     */
+
+    public static function findByPasswordReset($token)
+    {
+        $token = new Token($token);
+        $hashed_token = $token->getHash();
+
+        $sql = 'SELECT * FROM users
+        WHERE password_reset_hash = :token_hash';
+
+        $db = static::getDB();
+
+        $stmt = $db->prepare($sql);
+
+        $stmt->bindValue(':token_hash', $hashed_token, PDO::PARAM_STR);
+
+        $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
+
+        $stmt->execute();
+
+        $user = $stmt->fetch();
+
+        if($user){
+
+            //Cerco il reset del token se non è scaduto
+            if(strtotime($user->password_reset_expires_at) > time()){
+
+                return $user;
+
+            }
+
+        }
+
+
+    }
 }

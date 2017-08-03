@@ -30,9 +30,17 @@ class Token
      * @return void
      */
 
-    public function __construct()
+    public function __construct($token_value = null)
     {
-        $this->token = bin2hex(random_bytes(16)); // 16 bytes = 128 bits = 32 hex caratteri
+        if ($token_value) {
+
+            $this->token = $token_value;
+
+        } else {
+
+            $this->token = bin2hex(random_bytes(16)); // 16 bytes = 128 bits = 32 hex caratteri
+
+        }
     }
 
     /**
@@ -41,14 +49,9 @@ class Token
      * @return string valore
      */
 
-    public function getValue($token_value = null)
+    public function getValue()
     {
-        if($token_value){
-            $this->token = $token_value;
-        } else {
-            $this->token = bin2hex(random_bytes(16)); // 16 bytes = 128 bits = 32 hex caratteti
-        }
-
+        return $this->token;
     }
 
     /**

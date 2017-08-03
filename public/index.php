@@ -44,6 +44,9 @@ $router->add('login', ['controller' => 'Login', 'action' => 'new']);
 // Route custom per il logout
 $router->add('logout', ['controller' => 'Login', 'action' => 'destroy']);
 
+// Route password reset
+$router->add('password/reset/{token:[\da-f]+}', ['controller' => 'Password', 'action' => 'reset']);
+
 $router->add('{controller}/{action}');
 
 $router->dispatch($_SERVER['QUERY_STRING']);
