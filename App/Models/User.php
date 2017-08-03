@@ -89,7 +89,7 @@ class User extends Model
             $this->errors[] = 'Email non valida';
         }
         // se l'email esiste
-        if(static::emailExists($this->email)){
+        if(static::emailExists($this->email, $this->id ?? null)){
             $this->errors[] = 'Email già presente nei nostri sistemi';
         }
 
@@ -120,9 +120,16 @@ class User extends Model
      *
      */
 
-    public static function emailExists($email){
+    public static function emailExists($email, $ignore_id = null){
 
-        return static::findByEmail($email) !== false;
+        $user = static::findByEmail($email);
+
+        if($user){
+            if ($user->id != $ignore_id){
+                return true;
+            }
+        }
+        return false;
 
     }
 
@@ -316,8 +323,7 @@ class User extends Model
         $token = new Token($token);
         $hashed_token = $token->getHash();
 
-        $sql = 'SELECT * FROM users
-        WHERE password_reset_hash = :token_hash';
+        $sql = 'SELECT * FROM users WHERE password_reset_hash = :token_hash';
 
         $db = static::getDB();
 
@@ -331,17 +337,52 @@ class User extends Model
 
         $user = $stmt->fetch();
 
-        if($user){
+        if ($user) {
 
             //Cerco il reset del token se non è scaduto
-            if(strtotime($user->password_reset_expires_at) > time()){
+            if (strtotime($user->password_reset_expires_at) > time()) {
 
                 return $user;
 
             }
 
         }
-
-
     }
+
+        /**
+         * Reset della password
+         *
+         * @param string $password nuova password
+         *
+         * @return boolean ritorna True se la pwd è stata aggiornata con successo, altrimenti falso
+         */
+
+    public function resetPassword($password)
+    {
+        $this->password = $password;
+
+        $this->validate();
+
+        if (empty($this->errors)) {
+
+            $password_hash = password_hash($this->password, PASSWORD_DEFAULT);
+
+            $sql = 'UPDATE users
+                    SET password_hash = :password_hash,
+                        password_reset_hash = NULL,
+                        password_reset_expires_at = NULL
+                    WHERE id = :id';
+
+            $db = static::getDB();
+            $stmt = $db->prepare($sql);
+
+            $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
+            $stmt->bindValue(':password_hash', $password_hash, PDO::PARAM_STR);
+
+            return $stmt->execute();
+        }
+
+        return false;
+    }
+
 }

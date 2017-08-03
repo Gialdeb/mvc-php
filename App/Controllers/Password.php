@@ -51,7 +51,7 @@ class Password extends Controller
 
         $token = $this->getUserOrExit($token);
 
-        $user = User::findByPasswordReset($token);
+//        $user = User::findByPasswordReset($token);
 
             View::renderTemplate('Password/reset.html',[
                 'token' => $token
@@ -70,7 +70,19 @@ class Password extends Controller
 
         $user = $this->getUserOrExit($token);
 
-         echo "resetta la password utente qui!";
+         if($user->resetPassword($_POST['password'])){
+
+             echo "Password Valida";
+//             View::renderTemplate('Password/reset_success.html');
+
+         } else {
+
+             View::renderTemplate('Password/reset.html',[
+                 'token' => $token,
+                 'user' => $user
+             ]);
+
+         }
 
     }
 
@@ -88,6 +100,8 @@ class Password extends Controller
 
         if($user){
 
+//            var_dump($user);
+//            echo "CIAO";
             return $user;
 
         } else {
