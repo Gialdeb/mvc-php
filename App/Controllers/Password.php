@@ -49,16 +49,53 @@ class Password extends Controller
     {
         $token = $this->route_params['token'];
 
+        $token = $this->getUserOrExit($token);
+
         $user = User::findByPasswordReset($token);
 
-//        var_dump($user);
+            View::renderTemplate('Password/reset.html',[
+                'token' => $token
+            ]);
+
+    }
+
+    /**
+     * Reset della password utente
+     *
+     * @return void
+     */
+    public function resetPasswordAction()
+    {
+        $token = $_POST['token'];
+
+        $user = $this->getUserOrExit($token);
+
+         echo "resetta la password utente qui!";
+
+    }
+
+    /**
+     * Cerca l'utente dal model con la pwd del token o finisci la richiesta tramite un mess
+     *
+     * @param string $token Password reset token inviato all'utente
+     *
+     * @return mixed User object se è stato trovato il token e non è scaduto, altrimenti null
+     */
+
+    protected function getUserOrExit($token)
+    {
+        $user = User::findByPasswordReset($token);
+
         if($user){
 
-            View::renderTemplate('Password/reset.html');
+            return $user;
+
         } else {
 
-            echo "password reset Token non valido!";
+            View::renderTemplate('Password/token_expired.html');
+            exit;
         }
+
     }
     
 }
