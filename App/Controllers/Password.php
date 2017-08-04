@@ -49,12 +49,12 @@ class Password extends Controller
     {
         $token = $this->route_params['token'];
 
-        $token = $this->getUserOrExit($token);
+        $token_url = $this->getUserOrExit($token);
 
 //        $user = User::findByPasswordReset($token);
 
             View::renderTemplate('Password/reset.html',[
-                'token' => $token
+                'token' => $token_url
             ]);
 
     }
@@ -79,7 +79,7 @@ class Password extends Controller
 
              View::renderTemplate('Password/reset.html',[
                  'token' => $token,
-                 'user' => $user
+                 'user'  => $user
              ]);
 
          }
@@ -100,8 +100,6 @@ class Password extends Controller
 
         if($user){
 
-//            var_dump($user);
-//            echo "CIAO";
             return $user;
 
         } else {

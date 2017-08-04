@@ -48,9 +48,13 @@
 </ul>
 {% endif %}
 
+<pre>
+    {{ dump(token.password_reset_hash) }}
+</pre>
+
 
 <form action="/password/reset-password" method="post" id="formPassword">
-    <input type="hidden" name="token" value="402734394998c6d159f9ff91c15ce933" />
+    <input type="hidden" name="token" value="{% if token %}{{ token.password_reset_hash }}{% else %}null{% endif %} " />
     <div>
         <label for="inputPassword">Password</label>
         <input type="password" id="inputPassword" name="password" placeholder="Password" required />
